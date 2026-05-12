@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>한솔테크닉스 신규사업 플랫폼</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Apple SD Gothic Neo","Pretendard","Noto Sans KR","Malgun Gothic",sans-serif;background:#f8fafc;color:#0f172a;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.page{display:none;}.page.active{display:block;}
+.container{max-width:1280px;margin:0 auto;padding:32px 24px;display:flex;flex-direction:column;gap:24px;}
+.container.narrow{max-width:960px;}
+
+/* 헤더 */
+.header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
+.header h1{font-size:36px;font-weight:800;color:#0f172a;letter-spacing:-.02em;line-height:1.2;}
+.header .subtitle{font-size:14px;color:#64748b;margin-top:8px;}
+.header-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.admin-link{font-size:13px;color:#64748b;padding:8px 14px;border-radius:8px;cursor:pointer;transition:background .15s,color .15s;user-select:none;}
+.admin-link:hover{background:#f1f5f9;color:#334155;}
+
+/* 버튼 */
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:#4f46e5;color:white;padding:12px 20px;border-radius:12px;font-weight:600;font-size:14px;border:none;cursor:pointer;box-shadow:0 10px 20px -5px rgba(79,70,229,.3);transition:background .2s;font-family:inherit;}
+.btn-primary:hover{background:#4338ca;}
+.btn-secondary{background:white;color:#475569;border:1px solid #e2e8f0;padding:10px 18px;border-radius:10px;font-weight:600;font-size:14px;cursor:pointer;transition:background .15s;font-family:inherit;}
+.btn-secondary:hover{background:#f8fafc;}
+.btn-mini{padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;border:1px solid #e2e8f0;background:white;color:#475569;cursor:pointer;margin-right:4px;transition:all .15s;font-family:inherit;}
+.btn-mini:hover{background:#f1f5f9;}
+.btn-mini.approve{background:#ecfdf5;color:#047857;border-color:#a7f3d0;}
+.btn-mini.approve:hover{background:#d1fae5;}
+.btn-mini.reject{background:#fff1f2;color:#be123c;border-color:#fecdd3;}
+.btn-mini.reject:hover{background:#ffe4e6;}
+
+/* 카드 */
+.card{background:white;border-radius:16px;border:1px solid #f1f5f9;box-shadow:0 1px 2px rgba(0,0,0,.03);padding:24px;}
+.card-title{display:flex;align-items:center;gap:8px;margin-bottom:24px;font-weight:700;color:#1e293b;font-size:16px;}
+.card-title svg{color:#4f46e5;}
+
+/* 타임라인 */
+.timeline{display:flex;align-items:flex-start;}
+.timeline-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;min-width:0;}
+.timeline-week{font-size:12px;font-weight:600;color:#334155;margin-bottom:12px;}
+.timeline-dot-row{width:100%;position:relative;height:16px;display:flex;align-items:center;}
+.tl-l,.tl-r{position:absolute;top:50%;height:2px;transform:translateY(-50%);}
+.tl-l{left:0;right:50%;}.tl-r{left:50%;right:0;}
+.line-done{background:#34d399;}.line-todo{background:#e2e8f0;}
+.timeline-dot{position:relative;z-index:1;margin:0 auto;width:14px;height:14px;border-radius:50%;}
+.dot-done{background:#10b981;}.dot-current{background:#3b82f6;box-shadow:0 0 0 4px #dbeafe;}.dot-todo{background:#cbd5e1;}
+.timeline-label{margin-top:12px;text-align:center;padding:0 4px;}
+.timeline-label .name{font-size:12px;font-weight:500;color:#334155;}
+.timeline-label .sub{font-size:12px;color:#94a3b8;margin-top:2px;}
+
+/* 상태 카드 */
+.status-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.status-card{background:white;border:2px solid #f1f5f9;border-radius:16px;padding:20px;box-shadow:0 1px 2px rgba(0,0,0,.03);}
+.sc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sc-label{font-size:14px;font-weight:500;color:#475569;}
+.sc-count{display:flex;align-items:baseline;gap:4px;color:#0f172a;}
+.sc-count .num{font-size:30px;font-weight:800;}.sc-count .unit{font-size:14px;font-weight:500;opacity:.7;}
+.icon-yellow{color:#fde047;}.icon-blue{color:#3b82f6;}.icon-violet{color:#8b5cf6;}.icon-rose{color:#f43f5e;}.icon-emerald{color:#10b981;}
+
+/* 테이블 */
+.table-wrap{overflow-x:auto;border-radius:12px;border:1px solid #f1f5f9;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+thead tr{background:#f8fafc;}
+th{text-align:left;padding:14px 16px;color:#64748b;font-weight:600;font-size:13px;}
+td{padding:14px 16px;border-top:1px solid #f1f5f9;color:#475569;}
+tbody tr:hover{background:#f8fafc;}
+td.task-name-cell{font-weight:600;color:#1e293b;}
+td.muted{color:#64748b;}
+
+/* 뱃지 */
+.badge{display:inline-block;padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:500;}
+.b-violet{background:#ede9fe;color:#6d28d9;}.b-emerald{background:#d1fae5;color:#047857;}
+.b-rose{background:#ffe4e6;color:#be123c;}.b-amber{background:#fef3c7;color:#b45309;}
+.b-blue{background:#dbeafe;color:#1d4ed8;}.b-slate{background:#e2e8f0;color:#475569;}
+.type-tag{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;}
+.tt-top{background:#dbeafe;color:#1d4ed8;}.tt-bottom{background:#ede9fe;color:#6d28d9;}
+.score-high{font-weight:700;color:#059669;}.score-mid{font-weight:700;color:#d97706;}.score-low{font-weight:700;color:#e11d48;}.score-none{font-weight:600;color:#cbd5e1;}
+
+/* 분포 */
+.dist-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;}
+.dist-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.dist-grid-1{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.dist-section{margin-bottom:20px;}
+.dist-section-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f1f5f9;}
+.dist-section-label{font-size:13px;font-weight:600;color:#475569;}
+.dist-section-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.dsb-blue{background:#dbeafe;color:#1d4ed8;}
+.dsb-teal{background:#d1fae5;color:#047857;}
+.dsb-gray{background:#e2e8f0;color:#475569;}
+.new-filter-wrap{background:white;border:1px solid #f1f5f9;border-radius:12px;padding:12px 16px;margin-bottom:14px;}
+.filter-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.filter-row:last-child{margin-bottom:0;}
+.filter-row-label{font-size:11px;font-weight:600;color:#94a3b8;min-width:60px;flex-shrink:0;letter-spacing:.3px;text-transform:uppercase;}
+.pill-group{display:flex;flex-wrap:wrap;gap:4px;}
+.f-pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid #e2e8f0;background:white;color:#94a3b8;transition:all .15s;user-select:none;font-family:inherit;}
+.f-pill:hover{border-color:#94a3b8;color:#475569;}
+.f-pill.on-type{background:#1e293b;color:white;border-color:#1e293b;}
+.f-pill.on-top{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;}
+.f-pill.on-bottom{background:#ede9fe;color:#6d28d9;border-color:#c4b5fd;}
+.f-pill.on-area-blue{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;}
+.f-pill.on-area-teal{background:#d1fae5;color:#047857;border-color:#6ee7b7;}
+.f-pill.on-area-gray{background:#e2e8f0;color:#475569;border-color:#94a3b8;}
+.f-pill.on-status{background:#1e293b;color:white;border-color:#1e293b;}
+.f-divider{border:none;border-top:1px solid #f1f5f9;margin:2px 0 8px;}
+.f-category-sep{font-size:10px;font-weight:600;color:#cbd5e1;padding:2px 4px;cursor:default;align-self:center;}
+.active-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;align-items:center;}
+.active-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;background:#f1f5f9;border-radius:20px;font-size:11px;font-weight:500;color:#475569;}
+.active-tag .tx{cursor:pointer;opacity:.6;font-size:12px;line-height:1;margin-left:1px;}
+.active-tag .tx:hover{opacity:1;}
+.f-reset{font-size:11px;color:#94a3b8;cursor:pointer;padding:2px 6px;border-radius:6px;border:none;background:none;font-family:inherit;margin-left:auto;}
+.f-reset:hover{background:#f1f5f9;color:#475569;}
+.filter-result{font-size:11px;color:#94a3b8;margin-top:6px;}
+.dist-card{background:#f8fafc;border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;transition:background .2s;}
+.dist-card:hover{background:#f1f5f9;}
+.dist-circle{position:relative;width:80px;height:80px;}
+.dist-circle svg{width:100%;height:100%;transform:rotate(-90deg);}
+.dist-circle .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#1e293b;}
+.dist-name{margin-top:12px;font-weight:600;color:#1e293b;font-size:14px;}
+.dist-sub{font-size:12px;color:#64748b;margin-top:4px;}
+
+/* 과제목록 헤더 */
+.list-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:20px;}
+.list-title{display:flex;align-items:center;gap:10px;font-weight:700;color:#1e293b;font-size:16px;}
+.list-title svg{color:#4f46e5;}
+.filter-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#1e293b;color:white;border-radius:9999px;font-size:12px;font-weight:500;}
+.pill-x{cursor:pointer;background:rgba(255,255,255,.2);border-radius:50%;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;}
+.pill-x:hover{background:rgba(255,255,255,.35);}
+.type-filter-group{display:flex;gap:8px;}
+.type-btn{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #e2e8f0;background:white;color:#94a3b8;transition:all .15s;font-family:inherit;}
+.type-btn:hover{background:#f8fafc;color:#64748b;}
+.type-btn.active-all{background:#1e293b;color:white;border-color:#1e293b;}
+.type-btn.active-top{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd;}
+.type-btn.active-bottom{background:#ede9fe;color:#6d28d9;border-color:#c4b5fd;}
+.total-info{margin-top:14px;font-size:12px;color:#64748b;}
+.empty-cell{text-align:center;padding:48px 0 !important;color:#94a3b8;font-size:14px;}
+.task-link{color:#1e293b;cursor:pointer;text-decoration:underline;text-decoration-color:#cbd5e1;text-underline-offset:3px;transition:color .15s,text-decoration-color .15s;}
+.task-link:hover{color:#4f46e5;text-decoration-color:#4f46e5;}
+
+/* 등록 폼 */
+.notice-box{background:#eef2ff;border:1px solid #c7d2fe !important;color:#3730a3;font-size:13px;line-height:1.75;}
+.notice-box strong{color:#312e81;}
+.form-4col{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:16px;margin-bottom:4px;}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+.form-group label{font-size:13px;font-weight:600;color:#334155;}
+.req{color:#ef4444;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;color:#334155;background:white;outline:none;transition:border-color .15s,box-shadow .15s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#818cf8;box-shadow:0 0 0 3px #c7d2fe;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:#cbd5e1;}
+.form-group textarea{resize:vertical;line-height:1.6;min-height:80px;}
+.form-actions{display:flex;justify-content:flex-end;gap:12px;padding-top:20px;border-top:1px solid #f1f5f9;}
+
+/* 첨부파일 영역 */
+.attach-zone{border:2px dashed #e2e8f0;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:#fafafa;}
+.attach-zone:hover,.attach-zone.drag-over{border-color:#818cf8;background:#f5f3ff;}
+.attach-zone p{font-size:13px;color:#94a3b8;margin-top:4px;}
+.attach-zone .icon{font-size:24px;}
+.attach-list{margin-top:12px;display:flex;flex-direction:column;gap:6px;}
+.attach-item{display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;font-size:13px;color:#334155;}
+.attach-item .fname{font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-right:8px;}
+.attach-item .fsize{color:#94a3b8;font-size:12px;margin-right:8px;}
+.attach-del{background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;padding:0 2px;line-height:1;}
+.attach-del:hover{color:#ef4444;}
+
+/* 관리자 */
+.status-select{padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:12px;background:white;color:#334155;cursor:pointer;font-family:inherit;outline:none;width:100%;}
+.status-select:focus{border-color:#818cf8;}
+.inline-input{padding:5px 9px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#334155;background:white;outline:none;width:100%;transition:border-color .15s,box-shadow .15s;}
+.inline-input:hover{border-color:#cbd5e1;}
+.inline-input:focus{border-color:#818cf8;box-shadow:0 0 0 2px #c7d2fe;}
+.inline-select{padding:5px 9px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit;color:#334155;background:white;outline:none;width:100%;cursor:pointer;transition:border-color .15s;}
+.inline-select:hover{border-color:#cbd5e1;}
+.inline-select:focus{border-color:#818cf8;box-shadow:0 0 0 2px #c7d2fe;}
+.score-badge{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;}
+.score-badge.no-score{background:#f8fafc;color:#94a3b8;border:1px dashed #e2e8f0;}
+.score-badge.no-score:hover{background:#f1f5f9;border-color:#cbd5e1;}
+.score-badge.has-score{background:#f0fdf4;color:#047857;border:1px solid #bbf7d0;}
+.score-badge.has-score:hover{background:#dcfce7;}
+
+/* 로그인 페이지 */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e293b 0%,#334155 100%);}
+.login-box{background:white;border-radius:20px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 25px 50px -12px rgba(0,0,0,.4);}
+.login-box h1{font-size:22px;font-weight:800;color:#0f172a;margin-bottom:4px;}
+.login-box .subtitle{font-size:13px;color:#64748b;margin-bottom:32px;}
+.login-box .form-group{margin-bottom:16px;}
+.login-box .form-group label{font-size:13px;font-weight:600;color:#334155;display:block;margin-bottom:6px;}
+.login-box .form-group input{width:100%;padding:11px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s;}
+.login-box .form-group input:focus{border-color:#818cf8;box-shadow:0 0 0 3px #c7d2fe;}
+.login-error{color:#be123c;font-size:13px;margin-top:8px;display:none;}
+.login-error.show{display:block;}
+.login-btn{width:100%;padding:13px;background:#4f46e5;color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:background .2s;}
+.login-btn:hover{background:#4338ca;}
+.login-logo{font-size:32px;margin-bottom:16px;}
+
+/* 모달 공통 */
+.modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal-bg.active{display:flex;}
+.modal-box{background:white;border-radius:16px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 25px 50px -12px rgba(0,0,0,.3);}
+.modal-box.sm{max-width:540px;}
+.modal-box.md{max-width:780px;}
+.modal-box.lg{max-width:1000px;}
+.modal-hd{display:flex;justify-content:space-between;align-items:center;padding:22px 28px;border-bottom:1px solid #f1f5f9;position:sticky;top:0;background:white;z-index:10;}
+.modal-hd h2{font-size:18px;font-weight:700;color:#1e293b;}
+.modal-x{background:none;border:none;font-size:26px;color:#94a3b8;cursor:pointer;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;}
+.modal-x:hover{background:#f1f5f9;color:#475569;}
+.modal-bd{padding:24px 28px;}
+.modal-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px;background:#f8fafc;border-radius:10px;margin-bottom:24px;font-size:13px;color:#475569;}
+.modal-meta strong{color:#1e293b;display:block;font-size:11px;margin-bottom:2px;font-weight:600;}
+.modal-sec{margin-bottom:20px;}
+.modal-sec h3{font-size:14px;font-weight:700;color:#4f46e5;margin-bottom:8px;}
+.modal-sec p{font-size:14px;line-height:1.7;color:#334155;white-space:pre-wrap;}
+.modal-ft{display:flex;justify-content:flex-end;gap:8px;padding:16px 28px;border-top:1px solid #f1f5f9;position:sticky;bottom:0;background:white;}
+
+/* 에디터 모달 */
+.editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px 8px 0 0;border-bottom:none;}
+.tb-btn{padding:5px 9px;border:1px solid #e2e8f0;border-radius:5px;background:white;font-size:13px;cursor:pointer;font-family:inherit;color:#334155;transition:all .15s;}
+.tb-btn:hover{background:#f1f5f9;}
+.tb-sep{width:1px;background:#e2e8f0;margin:2px 4px;}
+.editor-area{min-height:260px;border:1px solid #e2e8f0;border-radius:0 0 8px 8px;padding:16px;font-size:14px;line-height:1.7;outline:none;color:#334155;}
+.editor-area:focus{border-color:#818cf8;box-shadow:0 0 0 2px #c7d2fe;}
+.editor-attach-zone{border:2px dashed #e2e8f0;border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;margin-top:16px;}
+.editor-attach-zone:hover{border-color:#818cf8;background:#f5f3ff;}
+.editor-attach-zone p{font-size:13px;color:#94a3b8;}
+
+/* 평점 팝업 */
+.score-table{width:100%;border-collapse:collapse;font-size:13px;}
+.score-table th{background:#1e3a5f;color:white;padding:10px 12px;text-align:center;font-weight:600;font-size:12px;}
+.score-table th:first-child,.score-table th:nth-child(2),.score-table th:nth-child(3){text-align:left;}
+.score-table td{padding:9px 12px;border-bottom:1px solid #f1f5f9;color:#334155;vertical-align:middle;}
+.score-table tbody tr:hover{background:#f8fafc;}
+.score-table tr.disabled td{color:#cbd5e1;}
+.score-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:6px;border:1px solid #e2e8f0;background:white;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:#475569;}
+.score-num:hover{background:#e0e7ff;border-color:#818cf8;color:#4f46e5;}
+.score-num.active{background:#4f46e5;border-color:#4f46e5;color:white;}
+.score-display{font-weight:700;text-align:center;}
+.score-display.val{color:#4f46e5;}
+.score-footer{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#f8fafc;border-top:2px solid #e2e8f0;border-radius:0 0 8px 8px;font-size:13px;}
+.score-total{font-weight:800;color:#0f172a;font-size:15px;}
+.score-avg{color:#4f46e5;font-weight:700;font-size:18px;}
+
+@keyframes fadeup{from{opacity:0;transform:translateX(-50%) translateY(8px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@media(max-width:900px){
+  .status-grid{grid-template-columns:repeat(2,1fr);}
+  .dist-grid{grid-template-columns:repeat(3,1fr);}
+  .form-4col{grid-template-columns:1fr 1fr;}
+  .modal-meta{grid-template-columns:repeat(2,1fr);}
+  .header h1{font-size:26px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ 로그인 ═══════════════ -->
+<div id="page-login" class="page">
+  <div class="login-wrap">
+    <div class="login-box">
+      <div class="login-logo">🏢</div>
+      <h1>관리자 로그인</h1>
+      <p class="subtitle">한솔테크닉스 신규사업 플랫폼 관리자 전용</p>
+      <form onsubmit="doLogin(event)">
+        <div class="form-group">
+          <label>이메일 (ID)</label>
+          <input type="text" id="login-id" placeholder="아이디 또는 이메일 입력" autocomplete="username"/>
+        </div>
+        <div class="form-group">
+          <label>비밀번호</label>
+          <input type="password" id="login-pw" placeholder="비밀번호 입력" autocomplete="current-password"/>
+        </div>
+        <div class="login-error" id="login-error">아이디 또는 비밀번호가 올바르지 않습니다.</div>
+        <button type="submit" class="login-btn">로그인</button>
+      </form>
+      <div style="margin-top:16px;text-align:center;">
+        <span class="admin-link" onclick="go('user')" style="font-size:13px;">← 사용자 페이지로 돌아가기</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ 사용자 페이지 ═══════════════ -->
+<div id="page-user" class="page active">
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>한솔테크닉스 포트폴리오 점검 플랫폼</h1>
+      <p class="subtitle">미래를 선도할 새로운 가치를 제안하고 실현합니다.</p>
+    </div>
+    <div class="header-actions">
+      <span class="admin-link" onclick="go('login')">⚙ 관리자 페이지</span>
+      <button class="btn-primary" onclick="go('register')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        신규 과제 등록
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      추진 일정
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
+
+  <div class="status-grid" id="status-grid"></div>
+
+  <div class="card">
+    <div class="list-title" style="margin-bottom:16px;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>
+      과제 목록
+    </div>
+
+    <div class="new-filter-wrap">
+      <div class="filter-row">
+        <span class="filter-row-label">공모 방식</span>
+        <div class="pill-group">
+          <button class="f-pill on-type" onclick="toggleTypeFilter('전체',this)">전체</button>
+          <button class="f-pill" onclick="toggleTypeFilter('Top-Down',this)">Top-Down</button>
+          <button class="f-pill" onclick="toggleTypeFilter('Bottom-Up',this)">Bottom-Up</button>
+        </div>
+      </div>
+      <hr class="f-divider"/>
+      <div class="filter-row">
+        <span class="filter-row-label">과제 주제</span>
+        <div class="pill-group">
+          <span class="f-category-sep">유망</span>
+          <button class="f-pill" onclick="toggleAreaFilter('AI디지털',this,'blue')">AI디지털</button>
+          <button class="f-pill" onclick="toggleAreaFilter('반도체',this,'blue')">반도체</button>
+          <button class="f-pill" onclick="toggleAreaFilter('자동화로봇',this,'blue')">자동화로봇</button>
+          <button class="f-pill" onclick="toggleAreaFilter('바이오헬스',this,'blue')">바이오헬스</button>
+          <button class="f-pill" onclick="toggleAreaFilter('에너지환경',this,'blue')">에너지환경</button>
+          <button class="f-pill" onclick="toggleAreaFilter('모빌리티',this,'blue')">모빌리티</button>
+          <span class="f-category-sep">기존사업</span>
+          <button class="f-pill" onclick="toggleAreaFilter('Display',this,'teal')">Display</button>
+          <button class="f-pill" onclick="toggleAreaFilter('가전',this,'teal')">가전</button>
+          <button class="f-pill" onclick="toggleAreaFilter('무선/램프',this,'teal')">무선/램프</button>
+          <span class="f-category-sep">기타</span>
+          <button class="f-pill" onclick="toggleAreaFilter('기타',this,'gray')">기타</button>
+        </div>
+      </div>
+      <hr class="f-divider"/>
+      <div class="filter-row">
+        <span class="filter-row-label">진행 현황</span>
+        <div class="pill-group">
+          <button class="f-pill" onclick="toggleStatusFilter('아이디어 발굴',this)">아이디어 발굴</button>
+          <button class="f-pill" onclick="toggleStatusFilter('사업 개발 과제 정의',this)">사업 개발 과제 정의</button>
+          <button class="f-pill" onclick="toggleStatusFilter('사업 개발 진행 중',this)">사업 개발 진행 중</button>
+          <button class="f-pill" onclick="toggleStatusFilter('사업 개발 중단',this)">사업 개발 중단</button>
+          <button class="f-pill" onclick="toggleStatusFilter('사업 개발 완료',this)">사업 개발 완료</button>
+        </div>
+      </div>
+      <hr class="f-divider" style="margin-top:12px;"/>
+      <div class="active-tags" id="active-tags">
+        <button class="f-reset" onclick="resetAllFilters()">전체 초기화</button>
+      </div>
+      <div class="filter-result" id="filter-result"></div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:56px">ID</th><th>과제명</th><th>구분</th><th>사업영역</th><th>제안자</th><th>평균점수</th><th>상태</th>
+        </tr></thead>
+        <tbody id="task-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+      사업영역별 과제 분포
+    </div>
+    <div id="dist-container"></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ 등록 페이지 ═══════════════ -->
+<div id="page-register" class="page">
+<div class="container narrow">
+  <div class="header">
+    <div>
+      <h1>Bottom-Up 과제 제안서</h1>
+      <p class="subtitle">임직원 아이디어 공모 · 전 임직원 / 팀 단위 제안 가능</p>
+    </div>
+    <button class="btn-secondary" onclick="go('user')">← 돌아가기</button>
+  </div>
+  <div class="card notice-box">
+    <strong>📌 작성 안내:</strong> 핵심 아이디어 중심의 간략한 제안서를 작성합니다.<br/>
+    기존사업(Display, 가전, 무선/램프) 및 유망영역(AI디지털, 반도체, 자동화로봇, 바이오헬스, 에너지환경, 모빌리티)에서 시너지 창출이 가능한 아이디어를 자유롭게 제안해 주세요.<br/>
+    <span style="color:#4338ca;">💡 전문적인 수준이 아니어도 괜찮습니다. 다만 시장·고객·경쟁 등에 대한 본인만의 분석과 근거가 구체적일수록 평가에 유리합니다.</span>
+  </div>
+  <div class="card">
+    <form id="reg-form" onsubmit="submitForm(event)">
+      <div class="form-4col">
+        <div class="form-group">
+          <label>제안 과제명 <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="직관적이고 명확한 신규 아이템 명칭" required/>
+        </div>
+        <div class="form-group">
+          <label>부서명</label>
+          <input type="text" name="department" placeholder="OOO팀"/>
+        </div>
+        <div class="form-group">
+          <label>공모자 <span class="req">*</span></label>
+          <input type="text" name="proposer" placeholder="이름 / 직급" required/>
+        </div>
+        <div class="form-group">
+          <label>사업영역</label>
+          <select name="area">
+            <optgroup label="── 유망영역 ──">
+              <option>AI디지털</option><option>반도체</option><option>자동화로봇</option>
+              <option>바이오헬스</option><option>에너지환경</option><option>모빌리티</option>
+            </optgroup>
+            <optgroup label="── 기존사업영역 ──">
+              <option>Display</option><option>가전</option><option>무선/램프</option>
+            </optgroup>
+            <optgroup label="── 기타 ──">
+              <option>기타</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>① 신규 아이템 개요 <span class="req">*</span></label>
+        <textarea name="overview" rows="4" placeholder="개발하고자 하는 아이템에 대한 개요를 작성하세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>② 해당 산업의 시장규모 및 성장성 <span class="req">*</span></label>
+        <textarea name="marketSize" rows="3" placeholder="정확한 수치가 아니어도 됩니다. 해당 산업의 대략적인 시장 크기나 성장 추세를 자유롭게 작성해 주세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>③ 제안 배경 / 필요성 <span class="req">*</span></label>
+        <textarea name="background" rows="3" placeholder="해당 아이템을 제안하게 된 배경과 필요성을 작성하세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>④ 타겟 고객 <span class="req">*</span></label>
+        <textarea name="targetCustomer" rows="3" placeholder="주요 타겟 고객군과 고객의 Pain Point를 작성하세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>⑤ 시장 경쟁력 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="competitiveness" rows="3" placeholder="경쟁사 대비 차별화 요소 및 시장 경쟁력을 작성하세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>⑥ 비즈니스 가치 / 실행 요구사항 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="businessValue" rows="3" placeholder="기대되는 비즈니스 가치와 실행에 필요한 요구사항을 작성하세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>⑦ 자사 보유역량 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="ownStrength" rows="3" placeholder="우리 회사가 이 아이디어를 잘 실현할 수 있는 이유나 보유 기술·역량이 있다면 자유롭게 작성해 주세요."></textarea>
+      </div>
+
+      <!-- 첨부파일 -->
+      <div class="form-group">
+        <label>첨부 파일 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <div class="attach-zone" id="reg-drop-zone" onclick="document.getElementById('reg-file-input').click()">
+          <div class="icon">📎</div>
+          <strong style="font-size:14px;color:#475569;">파일을 클릭하거나 드래그하여 첨부</strong>
+          <p>이미지, PDF, 문서 등 모든 형식 · 파일당 최대 50MB</p>
+        </div>
+        <input type="file" id="reg-file-input" multiple style="display:none" onchange="handleRegFiles(this.files)"/>
+        <div class="attach-list" id="reg-attach-list"></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn-secondary" onclick="clearRegFiles()">초기화</button>
+        <button type="submit" class="btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          제안서 저장 및 목록 등록
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ Top-Down 과제 등록 ═══════════════ -->
+<div id="page-topdown" class="page">
+<div class="container narrow">
+  <div class="header">
+    <div>
+      <h1>Top-Down 과제 등록</h1>
+      <p class="subtitle">관리자 직접 등록 · 승인 없이 즉시 과제 목록에 반영됩니다.</p>
+    </div>
+    <button class="btn-secondary" onclick="go('admin')">← 관리자 페이지</button>
+  </div>
+
+  <div class="card" style="background:#eff6ff;border:1px solid #bfdbfe !important;">
+    <strong style="color:#1d4ed8;">📌 Top-Down 과제 안내:</strong>
+    <span style="font-size:13px;color:#1e40af;"> 경영진 / 전략 방향에 따라 관리자가 직접 등록하는 과제입니다. 등록 즉시 사용자 페이지와 관리자 페이지의 과제 목록에 반영됩니다.</span>
+  </div>
+
+  <div class="card">
+    <form id="topdown-form" onsubmit="submitTopDown(event)">
+
+      <div class="form-4col">
+        <div class="form-group" style="grid-column:span 2;">
+          <label>과제명 <span class="req">*</span></label>
+          <input type="text" name="name" placeholder="과제명을 입력하세요" required/>
+        </div>
+        <div class="form-group">
+          <label>담당자 <span class="req">*</span></label>
+          <input type="text" name="proposer" placeholder="이름 / 직급" required/>
+        </div>
+        <div class="form-group">
+          <label>부서명 / 담당 TF <span class="req">*</span></label>
+          <input type="text" name="department" placeholder="OOO팀 / TF명" required/>
+        </div>
+      </div>
+
+      <div class="form-4col" style="grid-template-columns:1fr 1fr 1fr 1fr;margin-bottom:20px;">
+        <div class="form-group">
+          <label>사업영역 <span class="req">*</span></label>
+          <select name="area">
+            <optgroup label="── 유망영역 ──">
+              <option>AI디지털</option><option>반도체</option><option>자동화로봇</option>
+              <option>바이오헬스</option><option>에너지환경</option><option>모빌리티</option>
+            </optgroup>
+            <optgroup label="── 기존사업영역 ──">
+              <option>Display</option><option>가전</option><option>무선/램프</option>
+            </optgroup>
+            <optgroup label="── 기타 ──">
+              <option>기타</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>초기 상태</label>
+          <select name="status">
+            <option value="아이디어 발굴">아이디어 발굴</option>
+            <option value="사업 개발 과제 정의">사업 개발 과제 정의</option>
+            <option value="사업 개발 진행 중" selected>사업 개발 진행 중</option>
+            <option value="사업 개발 중단">사업 개발 중단</option>
+            <option value="사업 개발 완료">사업 개발 완료</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:span 2;">
+          <label>추진 일정 <span class="req">*</span></label>
+          <input type="text" name="background" placeholder="예) 25년 Q3 착수 → 26년 Q1 완료" required/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>① 과제 개요 <span class="req">*</span></label>
+        <textarea name="overview" rows="4" placeholder="과제의 전반적인 내용과 추진 방향성을 설명하세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>② 시장규모 및 성장성 <span class="req">*</span></label>
+        <textarea name="marketSize" rows="3" placeholder="해당 산업의 시장규모 및 성장성을 작성하세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>③ 기대 효과 / KPI <span class="req">*</span></label>
+        <textarea name="businessValue" rows="3" placeholder="목표 매출, 수익률, 시장점유율 등 수치 기반의 기대효과와 KPI를 작성하세요." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>④ 타겟 고객 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="targetCustomer" rows="3" placeholder="주요 타겟 고객군을 작성하세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>⑤ 시장 경쟁력 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="competitiveness" rows="3" placeholder="경쟁사 대비 차별화 요소를 작성하세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>⑥ 예산 / 투자 규모 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="budget" rows="2" placeholder="예상 투자 규모 및 예산 계획을 간략히 작성하세요."></textarea>
+      </div>
+      <div class="form-group">
+        <label>⑦ 자사 보유역량 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <textarea name="ownStrength" rows="2" placeholder="해당 과제 추진에 활용 가능한 자사 기술, 인프라, 역량을 작성하세요."></textarea>
+      </div>
+
+      <!-- 첨부파일 -->
+      <div class="form-group">
+        <label>첨부 파일 <span style="color:#94a3b8;font-weight:400;">(선택)</span></label>
+        <div class="attach-zone" id="td-drop-zone" onclick="document.getElementById('td-file-input').click()">
+          <div class="icon">📎</div>
+          <strong style="font-size:14px;color:#475569;">파일을 클릭하거나 드래그하여 첨부</strong>
+          <p>이미지, PDF, 문서 등 모든 형식 · 파일당 최대 50MB</p>
+        </div>
+        <input type="file" id="td-file-input" multiple style="display:none" onchange="handleTdFiles(this.files)"/>
+        <div class="attach-list" id="td-attach-list"></div>
+      </div>
+
+      <div class="form-actions">
+        <button type="reset" class="btn-secondary" onclick="clearTdFiles()">초기화</button>
+        <button type="submit" class="btn-primary">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          과제 즉시 등록
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ 관리자 페이지 ═══════════════ -->
+<div id="page-admin" class="page">
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>관리자 페이지</h1>
+      <p class="subtitle">Bottom-Up 과제 승인 및 전체 과제 상태 관리</p>
+    </div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <span style="font-size:13px;color:#64748b;">✅ 관리자 로그인됨</span>
+      <button class="btn-secondary" onclick="logout()">로그아웃</button>
+      <button class="btn-secondary" onclick="go('user')">← 사용자 페이지</button>
+      <button class="btn-primary" onclick="go('topdown')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Top-Down 과제 등록
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      추진 일정 관리
+      <span style="font-size:12px;font-weight:400;color:#94a3b8;margin-left:4px;">— 수정 후 저장하면 사용자 페이지에 즉시 반영됩니다</span>
+    </div>
+    <div id="tl-editor-rows" style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <button class="btn-secondary" onclick="resetTL()" style="font-size:13px;">↺ 기본값으로 초기화</button>
+      <button class="btn-primary" onclick="saveTLEdit()" style="padding:10px 20px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        일정 저장 및 반영
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Bottom-Up 과제 승인 대기&ensp;<span id="pending-cnt" style="color:#94a3b8;font-weight:500;font-size:13px;"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:56px">ID</th><th>과제명</th><th style="width:120px">제안자</th><th style="width:110px">부서</th><th style="width:130px">유망영역</th><th>작성일</th><th style="width:230px">관리</th>
+        </tr></thead>
+        <tbody id="pending-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      승인된 과제 — 상태 관리&ensp;<span id="approved-cnt" style="color:#94a3b8;font-weight:500;font-size:13px;"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:56px">ID</th><th>과제명</th><th>구분</th><th style="width:130px">유망영역</th><th style="width:120px">제안자</th><th style="width:110px">부서</th>
+          <th style="width:200px">상태 변경</th><th style="width:120px">평점</th><th style="width:72px">삭제</th>
+        </tr></thead>
+        <tbody id="approved-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ 모달들 ═══════════════ -->
+
+<!-- 사용자 과제 상세 팝업 -->
+<div class="modal-bg" id="modal-task-user" onclick="if(event.target===this)closeModal('modal-task-user')">
+  <div class="modal-box md" id="modal-task-user-box"></div>
+</div>
+
+<!-- 관리자 제안서 편집 팝업 -->
+<div class="modal-bg" id="modal-editor" onclick="if(event.target===this)closeModal('modal-editor')">
+  <div class="modal-box lg" id="modal-editor-box"></div>
+</div>
+
+<!-- 평점 팝업 -->
+<div class="modal-bg" id="modal-score" onclick="if(event.target===this)closeModal('modal-score')">
+  <div class="modal-box lg" id="modal-score-box"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ═══ Supabase 설정 ═══ */
+const SUPABASE_URL = 'https://hxnotafwtldjpwqyvxsj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_uHRBTkA9FNj3EPL6xzi7JQ_0qGtxSxm';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ═══ 데이터 상수 ═══ */
+const SK = "hansol-v4";
+
+const STATUSES = ["아이디어 발굴","사업 개발 과제 정의","사업 개발 진행 중","사업 개발 중단","사업 개발 완료"];
+const AREAS = ["AI디지털","반도체","자동화로봇","바이오헬스","에너지환경","모빌리티","Display","가전","무선/램프","기타"];
+
+// 평점 항목 정의
+const SCORE_ITEMS = [
+  {no:"②", cat:"해당 산업",   item:"성장성",       crit:"성장률 (금액 CAGR)",         active:true},
+  {no:"③", cat:"Target 시장", item:"시장 규모",     crit:"타겟 시장 전체 규모",          active:true},
+  {no:"④", cat:"Target 시장", item:"기대 수익",     crit:"향후 3년간 매출액 규모",        active:true},
+  {no:"⑤", cat:"Target 시장", item:"기대 수익",     crit:"향후 3년간 기대 수익률",        active:true},
+  {no:"⑥", cat:"Target 시장", item:"KSF (I,C,TO)",  crit:"시장/경쟁사 분석",             active:true},
+  {no:"⑦", cat:"Target 시장", item:"KSF (I,C,TO)",  crit:"고객 Needs 및 Pain Point 발굴",active:true},
+  {no:"⑧", cat:"Target 시장", item:"KSF (I,C,TO)",  crit:"자사 기술 역량 및 Operation이슈 파악",active:true},
+  {no:"⑨", cat:"Target 시장", item:"내부 역량 및 과제",crit:"외부 인력 충원 필요 여부",  active:true},
+  {no:"⑩", cat:"Target 시장", item:"내부 역량 및 과제",crit:"당면 과제 분석 및 대책",    active:true},
+  {no:"⑪", cat:"Target 시장", item:"기술 혁신성",   crit:"기술혁신 및 파급성",           active:true},
+  {no:"⑫", cat:"Target 시장", item:"기술 혁신성",   crit:"기술 적용시점",                active:false},
+  {no:"⑬", cat:"Target 시장", item:"기술 혁신성",   crit:"기술 난이도",                  active:false},
+  {no:"⑭", cat:"Target 시장", item:"기술 혁신성",   crit:"기술 확보를 통한 경쟁력",      active:false},
+];
+
+const CARDS_DEF = [
+  {label:"아이디어 발굴",      status:"아이디어 발굴",      ic:"icon-yellow",  icon:"bulb"},
+  {label:"사업 개발 과제 정의", status:"사업 개발 과제 정의", ic:"icon-blue",    icon:"file"},
+  {label:"사업 개발 진행 중",  status:"사업 개발 진행 중",  ic:"icon-violet",  icon:"gear"},
+  {label:"사업 개발 중단",     status:"사업 개발 중단",     ic:"icon-rose",    icon:"ban"},
+  {label:"사업 개발 완료",     status:"사업 개발 완료",     ic:"icon-emerald", icon:"flag"},
+];
+
+const SVG_ICONS = {
+  bulb:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.2 1 2V17h6v-.3c0-.8.4-1.5 1-2A7 7 0 0 0 12 2z"/></svg>',
+  file:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+  gear:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  ban:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>',
+  flag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
+};
+
+const TL_DEFAULT = [
+  {week:"4월 W3",label:"과제 접수 시작",sub:"(Top-Down 배포)",status:"done"},
+  {week:"4월 W4",label:"Bottom-Up",sub:"사내 게시",status:"done"},
+  {week:"5월 W1",label:"과제 접수",sub:"진행 중",status:"current"},
+  {week:"5월 W2",label:"과제 접수 마감",sub:"(~5/12)",status:"upcoming"},
+  {week:"5월 W3",label:"과제 선별",sub:"(~5/18)",status:"upcoming"},
+  {week:"5월 W4",label:"In 평가",sub:"(5/21)",status:"upcoming"},
+];
+let TL_DATA = JSON.parse(JSON.stringify(TL_DEFAULT));
+
+const DEFAULT_TASKS = [
+  {id:1,name:"AI 기반 스마트 팩토리 솔루션",type:"Top-Down",area:"AI디지털",proposer:"전략혁신팀",department:"전략혁신팀",score:4.2,status:"사업 개발 진행 중",createdAt:"2024-08-12"},
+  {id:2,name:"차세대 전장부품 경량화",type:"Top-Down",area:"모빌리티",proposer:"기술연구소",department:"기술연구소",score:3.8,status:"사업 개발 진행 중",createdAt:"2024-09-03"},
+  {id:3,name:"바이오센서 모듈 개발",type:"Bottom-Up",area:"바이오헬스",proposer:"김민수",department:"품질팀",score:3.4,status:"아이디어 발굴",createdAt:"2024-09-15"},
+  {id:4,name:"에너지 하베스팅 디바이스",type:"Bottom-Up",area:"에너지환경",proposer:"이지영",department:"개발팀",score:3.2,status:"아이디어 발굴",createdAt:"2024-10-02"},
+  {id:5,name:"로봇 비전 검사 시스템",type:"Top-Down",area:"자동화로봇",proposer:"생산기술팀",department:"생산기술팀",score:3.9,status:"사업 개발 진행 중",createdAt:"2024-07-20"},
+  {id:6,name:"반도체 패키징 신소재",type:"Top-Down",area:"반도체",proposer:"소재개발팀",department:"소재개발팀",score:2.8,status:"사업 개발 중단",createdAt:"2024-06-10"},
+  {id:7,name:"스마트 홈 IoT 허브",type:"Bottom-Up",area:"AI디지털",proposer:"박철수",department:"SW팀",score:3.3,status:"아이디어 발굴",createdAt:"2024-10-18"},
+  {id:8,name:"전기차 충전 모듈",type:"Top-Down",area:"모빌리티",proposer:"전장사업부",department:"전장사업부",score:4.0,status:"사업 개발 완료",createdAt:"2024-03-22"},
+  {id:9,name:"스마트 홈 에너지 관리 시스템",type:"Top-Down",area:"에너지환경",proposer:"신사업추진팀",department:"신사업추진팀",score:4.1,status:"사업 개발 진행 중",createdAt:"2024-07-15"},
+  {id:10,name:"고효율 태양광 인버터 솔루션",type:"Top-Down",area:"에너지환경",proposer:"에너지솔루션팀",department:"에너지솔루션팀",score:4.3,status:"사업 개발 완료",createdAt:"2024-04-08"},
+  {id:11,name:"전기차 충전 인프라 확장 사업",type:"Top-Down",area:"모빌리티",proposer:"인프라개발팀",department:"인프라개발팀",score:3.5,status:"사업 개발 중단",createdAt:"2024-05-30"},
+  {id:12,name:"스마트 팩토리 에너지 최적화",type:"Top-Down",area:"AI디지털",proposer:"산업IT솔루션팀",department:"산업IT솔루션팀",score:3.7,status:"사업 개발 진행 중",createdAt:"2024-08-25"},
+  {id:13,name:"친환경 재활용 디스플레이 패널",type:"Bottom-Up",area:"에너지환경",proposer:"정우성",department:"연구개발본부",score:3.0,status:"아이디어 발굴",createdAt:"2024-10-12"},
+  {id:14,name:"AI 헬스케어 진단 플랫폼",type:"Bottom-Up",area:"바이오헬스",proposer:"최영희",department:"데이터팀",score:3.6,status:"아이디어 발굴",createdAt:"2024-10-20"},
+  {id:15,name:"자율주행 센서 모듈",type:"Top-Down",area:"자동화로봇",proposer:"센서개발팀",department:"센서개발팀",score:3.8,status:"사업 개발 과제 정의",createdAt:"2024-09-25"},
+  {id:16,name:"차세대 메모리 반도체 소재",type:"Top-Down",area:"반도체",proposer:"메모리개발팀",department:"메모리개발팀",score:4.0,status:"사업 개발 과제 정의",createdAt:"2024-09-28"},
+  {id:17,name:"스마트 팜 IoT 솔루션",type:"Bottom-Up",area:"AI디지털",proposer:"한지원",department:"솔루션팀",score:3.1,status:"아이디어 발굴",createdAt:"2024-10-25"},
+  {id:18,name:"모빌리티 통합 플랫폼",type:"Top-Down",area:"모빌리티",proposer:"플랫폼사업부",department:"플랫폼사업부",score:3.9,status:"사업 개발 완료",createdAt:"2024-02-14"},
+];
+
+/* ═══ 앱 상태 ═══ */
+const S = {
+  tasks: [],
+  selStatus: null,
+  selType: "전체",
+  selAreas: [],
+  selStatuses: [],
+  regFiles: [],        // 등록 폼 첨부파일 (File 객체)
+  editorFiles: [],     // 에디터 첨부파일
+  scoreData: {},       // { taskId: [null,null,...] } 14개
+};
+
+/* ═══ Supabase DB 연동 ═══ */
+async function load(){
+  const {data,error}=await db.from('projects').select('*').order('id',{ascending:true});
+  if(error){console.error(error); S.tasks=JSON.parse(JSON.stringify(DEFAULT_TASKS)); return;}
+  if(!data||data.length===0){ S.tasks=JSON.parse(JSON.stringify(DEFAULT_TASKS)); await saveAll(); return;}
+  S.tasks=data.map(r=>({
+    id:r.id, name:r.name, department:r.department, proposer:r.proposer,
+    area:r.area, type:r.type, status:r.status, score:r.score||0,
+    overview:r.overview, marketSize:r.market_size, background:r.background,
+    targetCustomer:r.target_customer, competitiveness:r.competitiveness,
+    businessValue:r.business_value, attachFiles:r.attach_files||[],
+    editorContent:r.editor_content, editorFiles:r.editor_files||[],
+    createdAt:r.created_at,
+  }));
+}
+
+async function saveAll(){
+  const rows=S.tasks.map(t=>({
+    id:t.id, name:t.name, department:t.department||'', proposer:t.proposer||'',
+    area:t.area||'AI디지털', type:t.type||'Bottom-Up', status:t.status||'대기', score:t.score||0,
+    overview:t.overview||'', market_size:t.marketSize||'', background:t.background||'',
+    target_customer:t.targetCustomer||'', competitiveness:t.competitiveness||'',
+    business_value:t.businessValue||'', attach_files:t.attachFiles||[],
+    editor_content:t.editorContent||'', editor_files:t.editorFiles||[],
+    created_at:t.createdAt||new Date().toISOString().slice(0,10),
+  }));
+  await db.from('projects').upsert(rows,{onConflict:'id'});
+}
+
+async function saveOne(t){
+  await db.from('projects').upsert([{
+    id:t.id, name:t.name, department:t.department||'', proposer:t.proposer||'',
+    area:t.area||'AI디지털', type:t.type||'Bottom-Up', status:t.status||'대기', score:t.score||0,
+    overview:t.overview||'', market_size:t.marketSize||'', background:t.background||'',
+    target_customer:t.targetCustomer||'', competitiveness:t.competitiveness||'',
+    business_value:t.businessValue||'', attach_files:t.attachFiles||[],
+    editor_content:t.editorContent||'', editor_files:t.editorFiles||[],
+    created_at:t.createdAt||new Date().toISOString().slice(0,10),
+  }],{onConflict:'id'});
+}
+
+async function deleteOne(id){
+  await db.from('projects').delete().eq('id',id);
+}
+
+function save(){ saveAll(); }
+
+async function saveTL(){
+  await db.from('tl_data').upsert([{id:1,data:TL_DATA}],{onConflict:'id'});
+}
+async function loadTL(){
+  const {data}=await db.from('tl_data').select('data').eq('id',1).single();
+  if(data&&data.data) TL_DATA=data.data;
+}
+async function saveScores(){
+  await db.from('score_data').upsert([{id:1,data:S.scoreData}],{onConflict:'id'});
+}
+async function loadScores(){
+  const {data}=await db.from('score_data').select('data').eq('id',1).single();
+  if(data&&data.data) S.scoreData=data.data;
+}
+function nextId(){ return S.tasks.length?Math.max(...S.tasks.map(t=>t.id))+1:1; }
+
+/* ═══ 유틸 ═══ */
+function esc(s){ return (s==null?"":String(s)).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function statusBadge(s){
+  const m={"아이디어 발굴":"b-amber","사업 개발 과제 정의":"b-blue","사업 개발 진행 중":"b-violet","사업 개발 중단":"b-rose","사업 개발 완료":"b-emerald","대기":"b-slate"};
+  return `<span class="badge ${m[s]||'b-slate'}">${esc(s)}</span>`;
+}
+function scoreCls(n){ return n>=4?"score-high":n>=3?"score-mid":"score-low"; }
+function fmtSize(b){ return b>1048576?(b/1048576).toFixed(1)+"MB":b>1024?(b/1024).toFixed(0)+"KB":b+"B"; }
+
+/* ═══ 화면 전환 ═══ */
+function go(name){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+  window.scrollTo(0,0);
+  if(name==="user") renderUser();
+  if(name==="admin") renderAdmin();
+}
+
+/* ═══ 로그인 ═══ */
+async function doLogin(e){
+  e.preventDefault();
+  const id=document.getElementById("login-id").value.trim();
+  const pw=document.getElementById("login-pw").value;
+  const err=document.getElementById("login-error");
+  const btn=e.target.querySelector('.login-btn');
+  btn.textContent='로그인 중...'; btn.disabled=true;
+  const {error}=await db.auth.signInWithPassword({email:id,password:pw});
+  btn.textContent='로그인'; btn.disabled=false;
+  if(error){ err.classList.add("show"); return; }
+  err.classList.remove("show");
+  sessionStorage.setItem("admin","1");
+  go("admin");
+}
+async function logout(){
+  await db.auth.signOut();
+  sessionStorage.removeItem("admin");
+  go("user");
+}
+
+/* ═══ 타임라인 ═══ */
+function renderTimeline(){
+  document.getElementById("timeline").innerHTML=TL_DATA.map((s,i)=>{
+    const prev=TL_DATA[i-1];
+    const ll=i>0?`<div class="tl-l ${prev.status==='done'?'line-done':'line-todo'}"></div>`:"";
+    const rl=i<TL_DATA.length-1?`<div class="tl-r ${s.status==='done'?'line-done':'line-todo'}"></div>`:"";
+    const dc=s.status==="done"?"dot-done":s.status==="current"?"dot-current":"dot-todo";
+    return `<div class="timeline-step">
+      <div class="timeline-week">${s.week}</div>
+      <div class="timeline-dot-row">${ll}${rl}<div class="timeline-dot ${dc}"></div></div>
+      <div class="timeline-label"><div class="name">${s.label}</div><div class="sub">${s.sub}</div></div>
+    </div>`;
+  }).join("");
+}
+
+/* ═══ 상태 카드 ═══ */
+function renderCards(){
+  const cnt={}; STATUSES.forEach(s=>cnt[s]=0);
+  S.tasks.filter(t=>t.status!=="대기").forEach(t=>{ if(cnt[t.status]!==undefined)cnt[t.status]++; });
+  document.getElementById("status-grid").innerHTML=CARDS_DEF.map(c=>`
+    <div class="status-card">
+      <div class="sc-head"><span class="sc-label">${c.label}</span><span class="${c.ic}">${SVG_ICONS[c.icon]}</span></div>
+      <div class="sc-count"><span class="num">${String(cnt[c.status]||0).padStart(2,"0")}</span><span class="unit">건</span></div>
+    </div>`).join("");
+}
+
+/* ═══ 과제 목록 ═══ */
+function renderTaskList(){
+  let tasks=S.tasks.filter(t=>t.status!=="대기");
+  if(S.selType!=="전체") tasks=tasks.filter(t=>t.type===S.selType);
+  if(S.selAreas.length) tasks=tasks.filter(t=>S.selAreas.includes(t.area));
+  if(S.selStatuses.length) tasks=tasks.filter(t=>S.selStatuses.includes(t.status));
+  const total=S.tasks.filter(t=>t.status!=="대기").length;
+  const fr=document.getElementById("filter-result");
+  if(fr) fr.textContent=`총 ${total}건 중 ${tasks.length}건 표시 중`;
+  renderActiveTags();
+  document.getElementById("task-tbody").innerHTML=tasks.length
+    ?tasks.map(t=>`<tr>
+      <td class="muted">${t.id}</td>
+      <td class="task-name-cell"><span class="task-link" onclick="viewTaskUser(${t.id})">${esc(t.name)}</span></td>
+      <td><span class="type-tag ${t.type==='Top-Down'?'tt-top':'tt-bottom'}">${t.type}</span></td>
+      <td>${esc(t.area)}</td>
+      <td>${esc(t.proposer||"-")}</td>
+      <td>${(()=>{
+        const sc=S.scoreData[t.id];
+        const vals=sc?sc.filter((v,i)=>SCORE_ITEMS[i].active&&v!==null):[];
+        if(vals.length>0){
+          const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+          t.score=Math.round(avg*10)/10;
+          return `<span class="${scoreCls(t.score)}">${t.score.toFixed(1)}</span>`;
+        }
+        return `<span style="display:inline-block;padding:3px 10px;border-radius:6px;background:#f1f5f9;color:#94a3b8;font-size:12px;font-weight:600;">평가전</span>`;
+      })()}</td>
+      <td>${statusBadge(t.status)}</td>
+    </tr>`).join("")
+    :`<tr><td colspan="7" class="empty-cell">해당하는 과제가 없습니다.</td></tr>`;
+}
+
+/* ═══ 분포 ═══ */
+function renderDist(){
+  const R=26,C=2*Math.PI*R;
+  function distCard(area,stroke,bg){
+    const all=S.tasks.filter(t=>t.area===area&&t.status!=="대기");
+    const total=all.length,active=all.filter(t=>t.status==="사업 개발 진행 중").length;
+    const off=C-(total>0?(active/total)*100:0)/100*C;
+    return `<div class="dist-card">
+      <div class="dist-circle">
+        <svg viewBox="0 0 70 70">
+          <circle cx="35" cy="35" r="${R}" fill="none" stroke="${bg}" stroke-width="5"/>
+          <circle cx="35" cy="35" r="${R}" fill="none" stroke="${stroke}" stroke-width="5"
+            stroke-dasharray="${C}" stroke-dashoffset="${off}" stroke-linecap="round"/>
+        </svg>
+        <div class="num">${total}</div>
+      </div>
+      <div class="dist-name">${area}</div>
+      <div class="dist-sub">진행 중 ${active}건</div>
+    </div>`;
+  }
+  const PROMISING=["AI디지털","반도체","자동화로봇","바이오헬스","에너지환경","모빌리티"];
+  const EXISTING=["Display","가전","무선/램프"];
+  document.getElementById("dist-container").innerHTML=`
+    <div class="dist-section">
+      <div class="dist-section-header">
+        <span class="dist-section-label">유망 사업영역</span>
+        <span class="dist-section-badge dsb-blue">6개 영역</span>
+      </div>
+      <div class="dist-grid">${PROMISING.map(a=>distCard(a,"#3b82f6","#dbeafe")).join("")}</div>
+    </div>
+    <div class="dist-section">
+      <div class="dist-section-header">
+        <span class="dist-section-label">기존사업영역</span>
+        <span class="dist-section-badge dsb-teal">3개 영역</span>
+      </div>
+      <div class="dist-grid-3">${EXISTING.map(a=>distCard(a,"#10b981","#d1fae5")).join("")}</div>
+    </div>
+    <div class="dist-section">
+      <div class="dist-section-header">
+        <span class="dist-section-label">기타</span>
+        <span class="dist-section-badge dsb-gray">1개 영역</span>
+      </div>
+      <div class="dist-grid-1">${distCard("기타","#94a3b8","#e2e8f0")}</div>
+    </div>`;
+}
+
+function renderUser(){ renderTimeline();renderCards();renderTaskList();renderDist(); }
+
+/* ═══ 필터 ═══ */
+function toggleStatus(s){ S.selStatus=S.selStatus===s?null:s; renderCards();renderTaskList(); }
+function clearStatus(){ S.selStatus=null; renderCards();renderTaskList(); }
+
+function toggleTypeFilter(type,btn){
+  S.selType=type;
+  document.querySelectorAll("[onclick^='toggleTypeFilter']").forEach(b=>{
+    b.classList.remove("on-type","on-top","on-bottom");
+  });
+  if(type==="전체") btn.classList.add("on-type");
+  else if(type==="Top-Down") btn.classList.add("on-top");
+  else btn.classList.add("on-bottom");
+  renderTaskList();
+}
+
+function toggleAreaFilter(area,btn,color){
+  const idx=S.selAreas.indexOf(area);
+  if(idx>=0){ S.selAreas.splice(idx,1); btn.classList.remove(`on-area-${color}`); }
+  else{ S.selAreas.push(area); btn.classList.add(`on-area-${color}`); }
+  renderTaskList();
+}
+
+function toggleStatusFilter(status,btn){
+  const idx=S.selStatuses.indexOf(status);
+  if(idx>=0){ S.selStatuses.splice(idx,1); btn.classList.remove("on-status"); }
+  else{ S.selStatuses.push(status); btn.classList.add("on-status"); }
+  renderTaskList();
+}
+
+function renderActiveTags(){
+  const wrap=document.getElementById("active-tags"); if(!wrap)return;
+  let html="";
+  if(S.selType!=="전체") html+=`<span class="active-tag">${esc(S.selType)}<span class="tx" onclick="resetTypeFilter()">×</span></span>`;
+  S.selAreas.forEach(a=>{ html+=`<span class="active-tag">${esc(a)}<span class="tx" onclick="removeAreaFilter('${a}')">×</span></span>`; });
+  S.selStatuses.forEach(s=>{ html+=`<span class="active-tag">${esc(s)}<span class="tx" onclick="removeStatusFilter('${s.replace(/'/g,"\\'")}')">×</span></span>`; });
+  html+=`<button class="f-reset" onclick="resetAllFilters()">전체 초기화</button>`;
+  wrap.innerHTML=html;
+}
+
+function resetTypeFilter(){
+  S.selType="전체";
+  document.querySelectorAll("[onclick^='toggleTypeFilter']").forEach(b=>b.classList.remove("on-type","on-top","on-bottom"));
+  document.querySelector("[onclick=\"toggleTypeFilter('전체',this)\"]").classList.add("on-type");
+  renderTaskList();
+}
+
+function removeAreaFilter(area){
+  S.selAreas=S.selAreas.filter(a=>a!==area);
+  const AREA_COLOR={"AI디지털":"blue","반도체":"blue","자동화로봇":"blue","바이오헬스":"blue","에너지환경":"blue","모빌리티":"blue","Display":"teal","가전":"teal","무선/램프":"teal","기타":"gray"};
+  const c=AREA_COLOR[area];
+  document.querySelectorAll("[onclick^='toggleAreaFilter']").forEach(b=>{
+    if(b.textContent.trim()===area) b.classList.remove(`on-area-${c}`);
+  });
+  renderTaskList();
+}
+
+function removeStatusFilter(status){
+  S.selStatuses=S.selStatuses.filter(s=>s!==status);
+  document.querySelectorAll("[onclick^='toggleStatusFilter']").forEach(b=>{
+    if(b.textContent.trim()===status) b.classList.remove("on-status");
+  });
+  renderTaskList();
+}
+
+function resetAllFilters(){
+  S.selType="전체"; S.selAreas=[]; S.selStatuses=[];
+  document.querySelectorAll("[onclick^='toggleTypeFilter']").forEach(b=>b.classList.remove("on-type","on-top","on-bottom"));
+  document.querySelector("[onclick=\"toggleTypeFilter('전체',this)\"]").classList.add("on-type");
+  document.querySelectorAll("[onclick^='toggleAreaFilter']").forEach(b=>b.className="f-pill");
+  document.querySelectorAll("[onclick^='toggleStatusFilter']").forEach(b=>b.classList.remove("on-status"));
+  renderTaskList();
+}
+
+/* ═══ 사용자 과제 상세 팝업 ═══ */
+function viewTaskUser(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  const isB=t.type==="Bottom-Up";
+  const hasC=!!(t.overview||t.marketSize||t.background||t.targetCustomer||t.competitiveness||t.businessValue);
+  const hasEditor=t.editorContent||(t.editorFiles&&t.editorFiles.length);
+
+  let bodyHtml="";
+  // 에디터로 작성된 내용 우선 표시
+  if(hasEditor){
+    bodyHtml=`<div style="margin-bottom:20px;">
+      <div style="font-size:13px;font-weight:700;color:#4f46e5;margin-bottom:10px;">📋 과제 제안서 상세</div>
+      <div style="border:1px solid #f1f5f9;border-radius:10px;padding:16px;font-size:14px;line-height:1.7;color:#334155;">${t.editorContent||"(작성 내용 없음)"}</div>
+    </div>`;
+    if(t.editorFiles&&t.editorFiles.length){
+      bodyHtml+=`<div style="margin-bottom:20px;">
+        <div style="font-size:13px;font-weight:700;color:#4f46e5;margin-bottom:8px;">📎 첨부 파일</div>
+        ${t.editorFiles.map(f=>`<div class="attach-item"><span class="fname">📄 ${esc(f.name)}</span><span class="fsize">${esc(f.size||f.sizeStr||'')}</span>${(f.url&&sessionStorage.getItem('admin'))?`<a href="${f.url}" target="_blank" style="font-size:12px;color:#4f46e5;white-space:nowrap;">⬇ 다운로드</a>`:''}</div>`).join("")}
+      </div>`;
+    }
+  } else if(hasC){
+    const labels = isB
+      ? ["① 신규 아이템 개요","② 해당 산업의 시장규모 및 성장성","③ 제안 배경 / 필요성","④ 타겟 고객","⑤ 시장 경쟁력","⑥ 비즈니스 가치 / 실행 요구사항","⑦ 자사 보유역량"]
+      : ["① 과제 개요","② 시장규모 및 성장성","③ 추진 일정","④ 기대 효과 / KPI","⑤ 타겟 고객","⑥ 시장 경쟁력","⑦ 예산 / 투자 규모","⑧ 자사 보유역량"];
+    const fields = isB
+      ? [t.overview, t.marketSize, t.background, t.targetCustomer, t.competitiveness, t.businessValue, t.ownStrength]
+      : [t.overview, t.marketSize, t.background, t.businessValue, t.targetCustomer, t.competitiveness, t.budget, t.ownStrength];
+    bodyHtml = fields.map((v,i)=> v
+      ? `<div class="modal-sec"><h3>${labels[i]}</h3><p>${esc(v)}</p></div>`
+      : ""
+    ).join("");
+    if(!bodyHtml) bodyHtml=`<div style="text-align:center;padding:32px 0;color:#94a3b8;font-size:14px;">작성된 내용이 없습니다.</div>`;
+  } else {
+    bodyHtml=`<div style="text-align:center;padding:32px 0;color:#94a3b8;font-size:14px;">작성된 내용이 없습니다.</div>`;
+  }
+  // 등록 폼 첨부파일
+  if(t.attachFiles&&t.attachFiles.length){
+    bodyHtml+=`<div style="margin-top:16px;">
+      <div style="font-size:13px;font-weight:700;color:#475569;margin-bottom:8px;">📎 제안서 첨부 파일</div>
+      ${t.attachFiles.map(f=>`<div class="attach-item"><span class="fname">📄 ${esc(f.name)}</span><span class="fsize">${esc(f.size||'')}</span>${(f.url&&sessionStorage.getItem('admin'))?`<a href="${f.url}" target="_blank" style="font-size:12px;color:#4f46e5;white-space:nowrap;">⬇ 다운로드</a>`:''}</div>`).join("")}
+    </div>`;
+  }
+
+  const typeCls=t.type==="Top-Down"?"tt-top":"tt-bottom";
+  const scls={"아이디어 발굴":"b-amber","사업 개발 과제 정의":"b-blue","사업 개발 진행 중":"b-violet","사업 개발 중단":"b-rose","사업 개발 완료":"b-emerald"}[t.status]||"b-slate";
+  document.getElementById("modal-task-user-box").innerHTML=`
+    <div class="modal-hd">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <h2>${esc(t.name)}</h2>
+        <span class="type-tag ${typeCls}" style="font-size:11px;">${t.type}</span>
+        <span class="badge ${scls}" style="font-size:11px;">${esc(t.status)}</span>
+      </div>
+      <button class="modal-x" onclick="closeModal('modal-task-user')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="modal-meta">
+        <div><strong>제안자 / 부서</strong>${esc(t.proposer)}${t.department?" · "+esc(t.department):""}</div>
+        <div><strong>유망영역</strong>${esc(t.area)}</div>
+        <div><strong>평균점수</strong>${(()=>{
+          const sc=S.scoreData[t.id];
+          const vals=sc?sc.filter((v,i)=>SCORE_ITEMS[i].active&&v!==null):[];
+          if(vals.length>0){
+            const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+            const rounded=Math.round(avg*10)/10;
+            return `<span class="${scoreCls(rounded)}" style="font-size:15px;">${rounded.toFixed(1)}</span>`;
+          }
+          return `<span style="display:inline-block;padding:3px 10px;border-radius:6px;background:#f1f5f9;color:#94a3b8;font-size:12px;font-weight:600;">평가전</span>`;
+        })()}</div>
+        <div><strong>등록일</strong>${t.createdAt}</div>
+      </div>
+      ${bodyHtml}
+    </div>
+    <div class="modal-ft"><button class="btn-secondary" onclick="closeModal('modal-task-user')">닫기</button></div>`;
+  openModal("modal-task-user");
+}
+
+/* ═══ 등록 폼 첨부파일 ═══ */
+/* ═══ Storage 파일 업로드 유틸 ═══ */
+const BUCKET = 'Portfolio_Files';
+async function uploadFiles(files){
+  const results=[];
+  for(const f of files){
+    const path=`${Date.now()}_${f.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+    const {data,error}=await db.storage.from(BUCKET).upload(path,f,{upsert:true});
+    if(error){ toast("⚠ 파일 업로드 실패: "+f.name); continue; }
+    const {data:urlData}=db.storage.from(BUCKET).getPublicUrl(data.path);
+    results.push({name:f.name, size:fmtSize(f.size), url:urlData.publicUrl, path:data.path});
+  }
+  return results;
+}
+
+function fileItemHtml(f,i,removeFn){
+  return `<div class="attach-item">
+    <span class="fname">📄 ${esc(f.name)}</span>
+    <span class="fsize">${esc(f.size)}</span>
+    ${f.url?`<a href="${f.url}" target="_blank" style="font-size:12px;color:#4f46e5;margin-right:8px;white-space:nowrap;">⬇ 다운로드</a>`:'<span style="font-size:12px;color:#94a3b8;margin-right:8px;">업로드 중...</span>'}
+    <button class="attach-del" onclick="${removeFn}(${i})">×</button>
+  </div>`;
+}
+
+function fileViewHtml(f){
+  return `<div class="attach-item">
+    <span class="fname">📄 ${esc(f.name)}</span>
+    <span class="fsize">${esc(f.size)}</span>
+    ${f.url?`<a href="${f.url}" target="_blank" style="font-size:12px;color:#4f46e5;white-space:nowrap;">⬇ 다운로드</a>`:''}
+  </div>`;
+}
+
+function handleRegFiles(files){
+  Array.from(files).forEach(f=>S.regFiles.push(f));
+  renderRegFileList();
+  document.getElementById("reg-file-input").value="";
+}
+function renderRegFileList(){
+  document.getElementById("reg-attach-list").innerHTML=S.regFiles.map((f,i)=>
+    `<div class="attach-item">
+      <span class="fname">📄 ${esc(f.name||f)}</span>
+      <span class="fsize">${esc(f.size?fmtSize(f.size):'-')}</span>
+      <button class="attach-del" onclick="removeRegFile(${i})">×</button>
+    </div>`).join("");
+}
+function removeRegFile(i){ S.regFiles.splice(i,1); renderRegFileList(); }
+function clearRegFiles(){ S.regFiles=[]; renderRegFileList(); }
+
+// 드래그앤드롭
+document.addEventListener("DOMContentLoaded",()=>{
+  const dz=document.getElementById("reg-drop-zone");
+  dz.addEventListener("dragover",e=>{e.preventDefault();dz.classList.add("drag-over");});
+  dz.addEventListener("dragleave",()=>dz.classList.remove("drag-over"));
+  dz.addEventListener("drop",e=>{
+    e.preventDefault(); dz.classList.remove("drag-over");
+    handleRegFiles(e.dataTransfer.files);
+  });
+  const tdz=document.getElementById("td-drop-zone");
+  tdz.addEventListener("dragover",e=>{e.preventDefault();tdz.classList.add("drag-over");});
+  tdz.addEventListener("dragleave",()=>tdz.classList.remove("drag-over"));
+  tdz.addEventListener("drop",e=>{
+    e.preventDefault(); tdz.classList.remove("drag-over");
+    handleTdFiles(e.dataTransfer.files);
+  });
+});
+
+/* ═══ 폼 제출 ═══ */
+async function submitForm(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('[type=submit]');
+  btn.textContent='파일 업로드 중...'; btn.disabled=true;
+  const fd=new FormData(e.target);
+  const attachMeta = S.regFiles.length ? await uploadFiles(S.regFiles) : [];
+  btn.textContent='저장 중...';
+  const newTask={
+    id:nextId(), name:(fd.get("name")||"").trim(), department:(fd.get("department")||"").trim(),
+    proposer:(fd.get("proposer")||"").trim(), area:fd.get("area"), type:"Bottom-Up",
+    status:"대기", score:0,
+    overview:fd.get("overview"), marketSize:fd.get("marketSize"), background:fd.get("background"),
+    targetCustomer:fd.get("targetCustomer"), competitiveness:fd.get("competitiveness"), businessValue:fd.get("businessValue"),
+    ownStrength:fd.get("ownStrength"),
+    attachFiles:attachMeta, createdAt:new Date().toISOString().slice(0,10),
+  };
+  const {error}=await db.from('projects').insert([{
+    id:newTask.id, name:newTask.name, department:newTask.department, proposer:newTask.proposer,
+    area:newTask.area, type:newTask.type, status:newTask.status, score:newTask.score,
+    overview:newTask.overview, market_size:newTask.marketSize, background:newTask.background,
+    target_customer:newTask.targetCustomer, competitiveness:newTask.competitiveness,
+    business_value:newTask.businessValue, attach_files:newTask.attachFiles,
+    editor_content:'', editor_files:[], created_at:newTask.createdAt,
+  }]);
+  btn.textContent='제안서 저장 및 목록 등록'; btn.disabled=false;
+  if(error){ toast("⚠ 저장 실패: "+error.message); return; }
+  S.tasks.push(newTask);
+  e.target.reset(); clearRegFiles();
+  toast("✓ 제안서가 저장되었습니다. 관리자 승인 후 과제 목록에 등록됩니다.");
+  setTimeout(()=>go("user"),900);
+}
+
+/* ═══ Top-Down 등록 폼 첨부파일 ═══ */
+const tdFiles=[];
+function handleTdFiles(files){
+  Array.from(files).forEach(f=>tdFiles.push(f));
+  renderTdFileList();
+  document.getElementById("td-file-input").value="";
+}
+function renderTdFileList(){
+  const el=document.getElementById("td-attach-list"); if(!el)return;
+  el.innerHTML=tdFiles.map((f,i)=>`
+    <div class="attach-item">
+      <span class="fname">📄 ${esc(f.name)}</span>
+      <span class="fsize">${fmtSize(f.size)}</span>
+      <button class="attach-del" onclick="removeTdFile(${i})">×</button>
+    </div>`).join("");
+}
+function removeTdFile(i){ tdFiles.splice(i,1); renderTdFileList(); }
+function clearTdFiles(){ tdFiles.length=0; renderTdFileList(); }
+
+async function submitTopDown(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('[type=submit]');
+  btn.textContent='파일 업로드 중...'; btn.disabled=true;
+  const fd=new FormData(e.target);
+  const attachMeta = tdFiles.length ? await uploadFiles(tdFiles) : [];
+  btn.textContent='등록 중...';
+  const newTask={
+    id:nextId(),
+    name:(fd.get("name")||"").trim(),
+    department:(fd.get("department")||"").trim(),
+    proposer:(fd.get("proposer")||"").trim(),
+    area:fd.get("area"),
+    type:"Top-Down",
+    status:fd.get("status")||"사업 개발 진행 중",
+    score:0,
+    background:fd.get("background"),
+    overview:fd.get("overview"),
+    marketSize:fd.get("marketSize"),
+    targetCustomer:fd.get("targetCustomer"),
+    competitiveness:fd.get("competitiveness"),
+    businessValue:fd.get("businessValue"),
+    budget:fd.get("budget"),
+    ownStrength:fd.get("ownStrength"),
+    attachFiles:attachMeta,
+    createdAt:new Date().toISOString().slice(0,10),
+  };
+  const {error}=await db.from('projects').insert([{
+    id:newTask.id, name:newTask.name, department:newTask.department, proposer:newTask.proposer,
+    area:newTask.area, type:newTask.type, status:newTask.status, score:newTask.score,
+    overview:newTask.overview, market_size:newTask.marketSize, background:newTask.background,
+    target_customer:newTask.targetCustomer, competitiveness:newTask.competitiveness,
+    business_value:newTask.businessValue, attach_files:newTask.attachFiles,
+    editor_content:JSON.stringify({budget:newTask.budget,ownStrength:newTask.ownStrength}),
+    editor_files:[], created_at:newTask.createdAt,
+  }]);
+  btn.textContent='과제 즉시 등록'; btn.disabled=false;
+  if(error){ toast("⚠ 저장 실패: "+error.message); return; }
+  S.tasks.push(newTask);
+  e.target.reset(); clearTdFiles();
+  toast("✓ Top-Down 과제가 등록되었습니다. 과제 목록에 즉시 반영됩니다.");
+  setTimeout(()=>go("admin"),900);
+}
+
+/* ═══ 추진 일정 편집 ═══ */
+const STATUS_OPTIONS = ["done","current","upcoming"];
+const STATUS_LABELS  = {"done":"완료","current":"진행 중","upcoming":"예정"};
+const STATUS_COLORS  = {"done":"#10b981","current":"#3b82f6","upcoming":"#94a3b8"};
+
+function renderTLEditor(){
+  const el = document.getElementById("tl-editor-rows"); if(!el) return;
+  el.innerHTML = TL_DATA.map((s,i) => `
+    <div style="display:grid;grid-template-columns:140px 1fr 1fr 130px 32px;gap:10px;align-items:center;padding:12px 16px;background:#f8fafc;border-radius:10px;border:1px solid #f1f5f9;">
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;">주차</div>
+        <input type="text" value="${esc(s.week)}" oninput="TL_DATA[${i}].week=this.value"
+          style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;outline:none;background:white;"/>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;">단계명</div>
+        <input type="text" value="${esc(s.label)}" oninput="TL_DATA[${i}].label=this.value"
+          style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;outline:none;background:white;"/>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;">보조 텍스트</div>
+        <input type="text" value="${esc(s.sub)}" oninput="TL_DATA[${i}].sub=this.value"
+          style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;outline:none;background:white;"/>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;color:#64748b;margin-bottom:4px;">진행 상태</div>
+        <select onchange="TL_DATA[${i}].status=this.value"
+          style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;background:white;outline:none;cursor:pointer;">
+          ${STATUS_OPTIONS.map(o=>`<option value="${o}"${s.status===o?" selected":""}>${STATUS_LABELS[o]}</option>`).join("")}
+        </select>
+      </div>
+      <div style="display:flex;align-items:flex-end;padding-bottom:2px;">
+        <div style="width:14px;height:14px;border-radius:50%;background:${STATUS_COLORS[s.status]};margin:0 auto;margin-top:20px;flex-shrink:0;"></div>
+      </div>
+    </div>`).join("");
+}
+
+function saveTLEdit(){
+  saveTL();
+  renderTimeline();   // 사용자 페이지 타임라인 즉시 갱신
+  toast("✓ 일정이 저장되었습니다. 사용자 페이지에 반영되었습니다.");
+}
+
+function resetTL(){
+  if(!confirm("기본값으로 초기화하시겠습니까?")) return;
+  TL_DATA = JSON.parse(JSON.stringify(TL_DEFAULT));
+  saveTL(); renderTLEditor(); renderTimeline();
+  toast("✓ 일정이 기본값으로 초기화되었습니다.");
+}
+
+/* ═══ 관리자 렌더 ═══ */
+function renderAdmin(){
+  renderTLEditor();
+  const pending=S.tasks.filter(t=>t.status==="대기");
+  const approved=S.tasks.filter(t=>t.status!=="대기");
+  document.getElementById("pending-cnt").textContent=`(${pending.length}건)`;
+  document.getElementById("approved-cnt").textContent=`(${approved.length}건)`;
+
+  document.getElementById("pending-tbody").innerHTML=pending.length
+    ?pending.map(t=>`<tr>
+      <td class="muted">${t.id}</td>
+      <td class="task-name-cell"><span class="task-link" onclick="openEditor(${t.id})">${esc(t.name)}</span></td>
+      <td>${esc(t.proposer||"-")}</td>
+      <td>${esc(t.department||"-")}</td>
+      <td>${esc(t.area)}</td>
+      <td>${t.createdAt}</td>
+      <td>
+        <button class="btn-mini" onclick="openEditor(${t.id})">제안서 편집</button>
+        <button class="btn-mini approve" onclick="approve(${t.id})">승인</button>
+        <button class="btn-mini reject" onclick="reject(${t.id})">반려</button>
+      </td></tr>`).join("")
+    :`<tr><td colspan="7" class="empty-cell">승인 대기 중인 과제가 없습니다.</td></tr>`;
+
+  document.getElementById("approved-tbody").innerHTML=approved.length
+    ?approved.map(t=>{
+      const sc=S.scoreData[t.id];
+      const vals=sc?sc.filter((v,i)=>SCORE_ITEMS[i].active&&v!==null):[];
+      const avg=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2):null;
+      const scoreBtnCls=avg?"has-score":"no-score";
+      const scoreBtnTxt=avg?`⭐ ${avg}`:"평점 입력";
+      return `<tr>
+        <td class="muted">${t.id}</td>
+        <td class="task-name-cell"><span class="task-link" onclick="openEditor(${t.id})">${esc(t.name)}</span></td>
+        <td><span class="type-tag ${t.type==="Top-Down"?"tt-top":"tt-bottom"}">${t.type}</span></td>
+        <td>${esc(t.area)}</td>
+        <td>${esc(t.proposer||"-")}</td>
+        <td>${esc(t.department||"-")}</td>
+        <td><select class="status-select" onchange="updateStatus(${t.id},this.value)">
+          ${STATUSES.map(s=>`<option value="${s}"${t.status===s?" selected":""}>${s}</option>`).join("")}
+        </select></td>
+        <td><span class="score-badge ${scoreBtnCls}" onclick="openScore(${t.id})">${scoreBtnTxt}</span></td>
+        <td><button class="btn-mini reject" onclick="del(${t.id})">삭제</button></td>
+      </tr>`;
+    }).join("")
+    :`<tr><td colspan="8" class="empty-cell">승인된 과제가 없습니다.</td></tr>`;
+}
+
+/* ═══ 관리자 액션 ═══ */
+async function approve(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  t.status="아이디어 발굴";
+  await db.from('projects').update({status:"아이디어 발굴"}).eq('id',id);
+  renderAdmin(); renderUser();
+  toast("✓ 승인 완료. 사용자 페이지 과제 목록에 등록되었습니다.");
+}
+async function reject(id){
+  if(!confirm("반려하시겠습니까? 데이터는 삭제됩니다."))return;
+  await deleteOne(id);
+  S.tasks=S.tasks.filter(x=>x.id!==id); renderAdmin();
+}
+async function updateStatus(id,s){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  t.status=s;
+  await db.from('projects').update({status:s}).eq('id',id);
+}
+async function updateField(id,field,val){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  t[field]=val.trim(); await saveOne(t);
+}
+function openEditInfo(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  document.getElementById("modal-editor-box").innerHTML=`
+    <div class="modal-hd">
+      <h2>✏️ 과제 정보 편집 — ${esc(t.name)}</h2>
+      <button class="modal-x" onclick="closeModal('modal-editor')">×</button>
+    </div>
+    <div class="modal-bd">
+      <div class="form-group">
+        <label style="font-size:13px;font-weight:600;color:#334155;">제안자</label>
+        <input class="form-group input" id="ei-proposer" type="text" value="${esc(t.proposer||'')}" placeholder="제안자 이름"
+          style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;color:#334155;outline:none;"/>
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;font-weight:600;color:#334155;">부서명</label>
+        <input id="ei-department" type="text" value="${esc(t.department||'')}" placeholder="부서명"
+          style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;color:#334155;outline:none;"/>
+      </div>
+      <div class="form-group">
+        <label style="font-size:13px;font-weight:600;color:#334155;">유망영역</label>
+        <select id="ei-area"
+          style="width:100%;padding:10px 14px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;font-family:inherit;color:#334155;background:white;outline:none;cursor:pointer;">
+          ${AREAS.map(a=>`<option value="${a}"${t.area===a?" selected":""}>${a}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-secondary" onclick="closeModal('modal-editor')">취소</button>
+      <button class="btn-primary" onclick="saveEditInfo(${id})">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        저장
+      </button>
+    </div>`;
+  openModal("modal-editor");
+}
+async function saveEditInfo(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  t.proposer=document.getElementById("ei-proposer").value.trim();
+  t.department=document.getElementById("ei-department").value.trim();
+  t.area=document.getElementById("ei-area").value;
+  await saveOne(t); closeModal("modal-editor"); renderAdmin();
+  toast("✓ 과제 정보가 수정되었습니다.");
+}
+async function del(id){
+  if(!confirm("삭제하시겠습니까?"))return;
+  await deleteOne(id);
+  S.tasks=S.tasks.filter(x=>x.id!==id); renderAdmin();
+}
+
+/* ═══ 제안서 에디터 팝업 ═══ */
+function openEditor(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  S.editorFiles=t.editorFiles?[...t.editorFiles]:[];
+  const initContent=t.editorContent||"";
+
+  document.getElementById("modal-editor-box").innerHTML=`
+    <div class="modal-hd">
+      <h2>📝 제안서 편집 — ${esc(t.name)}</h2>
+      <button class="modal-x" onclick="closeModal('modal-editor')">×</button>
+    </div>
+    <div class="modal-bd">
+      <!-- 과제 기본 정보 편집 -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;padding:16px;background:#f8fafc;border-radius:10px;border:1px solid #f1f5f9;">
+        <div>
+          <label style="font-size:11px;font-weight:600;color:#64748b;display:block;margin-bottom:5px;">제안자</label>
+          <input id="ei-proposer" type="text" value="${esc(t.proposer||'')}" placeholder="제안자 이름"
+            style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;outline:none;"/>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:600;color:#64748b;display:block;margin-bottom:5px;">부서명</label>
+          <input id="ei-department" type="text" value="${esc(t.department||'')}" placeholder="부서명"
+            style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;outline:none;"/>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:600;color:#64748b;display:block;margin-bottom:5px;">유망영역</label>
+          <select id="ei-area"
+            style="width:100%;padding:8px 10px;border:1px solid #e2e8f0;border-radius:7px;font-size:13px;font-family:inherit;color:#334155;background:white;outline:none;cursor:pointer;">
+            ${AREAS.map(a=>`<option value="${a}"${t.area===a?" selected":""}>${a}</option>`).join("")}
+          </select>
+        </div>
+      </div>
+
+      <!-- 원본 제안서 내용 (Bottom-Up / Top-Down 공통) -->
+      ${(()=>{
+        const isB = t.type==="Bottom-Up";
+        const labels = isB
+          ? [["① 신규 아이템 개요",t.overview],["② 시장규모 및 성장성",t.marketSize],["③ 제안 배경 / 필요성",t.background],["④ 타겟 고객",t.targetCustomer],["⑤ 시장 경쟁력",t.competitiveness],["⑥ 비즈니스 가치 / 실행 요구사항",t.businessValue]]
+          : [["① 과제 개요",t.overview],["② 시장규모 및 성장성",t.marketSize],["③ 과제 배경 / 목적",t.background],["④ 타겟 고객",t.targetCustomer],["⑤ 시장 경쟁력",t.competitiveness],["⑥ 기대 효과 / 목표",t.businessValue]];
+        const rows = labels.filter(([,v])=>v).map(([label,v])=>`
+          <div style="margin-bottom:10px;">
+            <span style="font-size:12px;font-weight:700;color:#4f46e5;">${label}</span>
+            <p style="margin-top:4px;font-size:13px;color:#334155;line-height:1.65;white-space:pre-wrap;">${esc(v)}</p>
+          </div>`).join("");
+        return rows ? `
+          <div style="background:#f8fafc;border-radius:10px;padding:16px;margin-bottom:16px;border:1px solid #f1f5f9;">
+            <strong style="font-size:13px;color:#334155;display:block;margin-bottom:12px;">📋 원본 제안서 내용</strong>
+            ${rows}
+          </div>` : "";
+      })()}
+      <!-- 리치 에디터 -->
+      <div style="margin-bottom:16px;">
+        <label style="font-size:13px;font-weight:600;color:#334155;display:block;margin-bottom:8px;">상세 내용 작성</label>
+        <div class="editor-toolbar">
+          <button class="tb-btn" onclick="fmt('bold')"><b>B</b></button>
+          <button class="tb-btn" onclick="fmt('italic')"><i>I</i></button>
+          <button class="tb-btn" onclick="fmt('underline')"><u>U</u></button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="fmt('insertUnorderedList')">• 목록</button>
+          <button class="tb-btn" onclick="fmt('insertOrderedList')">1. 목록</button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="fmt('justifyLeft')">좌</button>
+          <button class="tb-btn" onclick="fmt('justifyCenter')">중앙</button>
+          <button class="tb-btn" onclick="fmt('justifyRight')">우</button>
+          <div class="tb-sep"></div>
+          <select onchange="fmt('fontSize',this.value);this.selectedIndex=0;" class="tb-btn" style="font-size:12px;">
+            <option value="">글자크기</option>
+            <option value="1">작게</option><option value="3">보통</option>
+            <option value="5">크게</option><option value="7">매우크게</option>
+          </select>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="insertImg()">🖼 이미지</button>
+        </div>
+        <div id="editor-area" class="editor-area" contenteditable="true" style="font-family:inherit;">${initContent}</div>
+        <input type="file" id="editor-img-input" accept="image/*" style="display:none" onchange="insertImgFile(this)"/>
+      </div>
+
+      <!-- 첨부파일 -->
+      <div>
+        <label style="font-size:13px;font-weight:600;color:#334155;display:block;margin-bottom:8px;">첨부 파일</label>
+        <div class="editor-attach-zone" onclick="document.getElementById('editor-file-input').click()">
+          <p>📎 파일을 클릭하거나 드래그하여 첨부 (이미지, PDF, 문서 등)</p>
+        </div>
+        <input type="file" id="editor-file-input" multiple style="display:none" onchange="handleEditorFiles(this.files)"/>
+        <div class="attach-list" id="editor-attach-list"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn-secondary" onclick="closeModal('modal-editor')">취소</button>
+      <button class="btn-primary" onclick="saveEditor(${id})">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        저장
+      </button>
+    </div>`;
+
+  renderEditorFileList();
+
+  // 드래그앤드롭 에디터
+  const dz=document.querySelector(".editor-attach-zone");
+  dz.addEventListener("dragover",e=>{e.preventDefault();dz.style.borderColor="#818cf8";});
+  dz.addEventListener("dragleave",()=>dz.style.borderColor="");
+  dz.addEventListener("drop",e=>{e.preventDefault();dz.style.borderColor="";handleEditorFiles(e.dataTransfer.files);});
+
+  openModal("modal-editor");
+}
+
+function fmt(cmd,val){ document.getElementById("editor-area").focus(); document.execCommand(cmd,false,val||null); }
+function insertImg(){ document.getElementById("editor-img-input").click(); }
+function insertImgFile(input){
+  const f=input.files[0]; if(!f)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    document.getElementById("editor-area").focus();
+    document.execCommand("insertImage",false,e.target.result);
+  };
+  reader.readAsDataURL(f);
+  input.value="";
+}
+function handleEditorFiles(files){
+  Array.from(files).forEach(f=>S.editorFiles.push(f));
+  renderEditorFileList();
+}
+function renderEditorFileList(){
+  const el=document.getElementById("editor-attach-list");
+  if(!el)return;
+  el.innerHTML=S.editorFiles.map((f,i)=>`
+    <div class="attach-item">
+      <span class="fname">📄 ${esc(f.name||f)}</span>
+      <span class="fsize">${esc(f.size?fmtSize(f.size):(f.sizeStr||'-'))}</span>
+      ${f.url?`<a href="${f.url}" target="_blank" style="font-size:12px;color:#4f46e5;margin-right:8px;">⬇ 다운로드</a>`:''}
+      <button class="attach-del" onclick="removeEditorFile(${i})">×</button>
+    </div>`).join("");
+}
+function removeEditorFile(i){ S.editorFiles.splice(i,1); renderEditorFileList(); }
+
+async function saveEditor(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  const btn=document.querySelector(`[onclick="saveEditor(${id})"]`);
+  if(btn){ btn.textContent='저장 중...'; btn.disabled=true; }
+  // 새 파일(File 객체)만 업로드, 기존 url 있는건 그대로
+  const newFiles=S.editorFiles.filter(f=>f instanceof File);
+  const existingFiles=S.editorFiles.filter(f=>!(f instanceof File));
+  const uploadedFiles = newFiles.length ? await uploadFiles(newFiles) : [];
+  const area=document.getElementById("editor-area");
+  t.editorContent=area?area.innerHTML:"";
+  t.editorFiles=[...existingFiles, ...uploadedFiles];
+  const p=document.getElementById("ei-proposer");
+  const d=document.getElementById("ei-department");
+  const a=document.getElementById("ei-area");
+  if(p) t.proposer=p.value.trim();
+  if(d) t.department=d.value.trim();
+  if(a) t.area=a.value;
+  await saveOne(t);
+  if(btn){ btn.textContent='저장'; btn.disabled=false; }
+  closeModal("modal-editor"); renderAdmin();
+  toast("✓ 저장되었습니다.");
+}
+
+/* ═══ 평점 팝업 ═══ */
+function openScore(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  if(!S.scoreData[id]) S.scoreData[id]=new Array(SCORE_ITEMS.length).fill(null);
+  const sc=S.scoreData[id];
+
+  function buildRows(){
+    return SCORE_ITEMS.map((item,i)=>{
+      if(!item.active){
+        return `<tr class="disabled">
+          <td style="text-align:center;color:#cbd5e1;">${item.no}</td>
+          <td style="color:#cbd5e1;">${item.cat}</td>
+          <td style="color:#cbd5e1;font-weight:600;">${item.item}</td>
+          <td style="color:#cbd5e1;">${item.crit}</td>
+          <td style="text-align:center;color:#cbd5e1;">-</td>
+          <td colspan="5"></td>
+          <td style="text-align:center;color:#cbd5e1;">-</td>
+        </tr>`;
+      }
+      const nums=[1,2,3,4,5].map(n=>`
+        <td style="text-align:center;">
+          <span class="score-num ${sc[i]===n?'active':''}" onclick="setScore(${id},${i},${n})">${n}</span>
+        </td>`).join("");
+      const cur=sc[i];
+      return `<tr>
+        <td style="text-align:center;font-weight:600;">${item.no}</td>
+        <td>${item.cat}</td>
+        <td style="font-weight:600;">${item.item}</td>
+        <td>${item.crit}</td>
+        <td style="text-align:center;font-weight:700;">5</td>
+        ${nums}
+        <td class="score-display ${cur!==null?'val':''}">${cur!==null?cur:"-"}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  function buildFooter(){
+    const vals=sc.filter((v,i)=>SCORE_ITEMS[i].active&&v!==null);
+    const total=vals.reduce((a,b)=>a+b,0);
+    const cnt=vals.length;
+    const avg=cnt>0?(total/cnt).toFixed(2):"0.00";
+    return `<div class="score-footer">
+      <span>합계 / 평균 (${cnt}/${SCORE_ITEMS.filter(x=>x.active).length}항목)</span>
+      <span><span class="score-total" style="color:#ef4444;">${total}</span>&ensp;/&ensp;평균 <span class="score-avg">${avg}</span></span>
+    </div>`;
+  }
+
+  function renderScoreModal(){
+    document.getElementById("modal-score-box").innerHTML=`
+      <div class="modal-hd">
+        <h2>⭐ 과제 평점 — ${esc(t.name)}</h2>
+        <button class="modal-x" onclick="closeModal('modal-score')">×</button>
+      </div>
+      <div class="modal-bd" style="padding:0;">
+        <div style="overflow-x:auto;">
+          <table class="score-table">
+            <thead><tr>
+              <th style="width:46px">No</th>
+              <th style="width:110px">구분</th>
+              <th style="width:130px">검토 항목</th>
+              <th>평가 기준</th>
+              <th style="width:46px;text-align:center;">배점</th>
+              <th style="width:38px;text-align:center;">1</th>
+              <th style="width:38px;text-align:center;">2</th>
+              <th style="width:38px;text-align:center;">3</th>
+              <th style="width:38px;text-align:center;">4</th>
+              <th style="width:38px;text-align:center;">5</th>
+              <th style="width:46px;text-align:center;">평가</th>
+            </tr></thead>
+            <tbody id="score-tbody">${buildRows()}</tbody>
+          </table>
+        </div>
+        <div id="score-footer">${buildFooter()}</div>
+      </div>
+      <div class="modal-ft">
+        <button class="btn-secondary" onclick="closeModal('modal-score')">닫기</button>
+        <button class="btn-primary" onclick="saveScore(${id})">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          평점 저장
+        </button>
+      </div>`;
+    openModal("modal-score");
+  }
+
+  window._scoreRebuild = function(){
+    const tbody=document.getElementById("score-tbody");
+    const footer=document.getElementById("score-footer");
+    if(tbody) tbody.innerHTML=buildRows();
+    if(footer) footer.innerHTML=buildFooter();
+  };
+
+  renderScoreModal();
+}
+
+function setScore(taskId,itemIdx,val){
+  if(!S.scoreData[taskId]) S.scoreData[taskId]=new Array(SCORE_ITEMS.length).fill(null);
+  // 같은 값 클릭 시 해제
+  S.scoreData[taskId][itemIdx]=S.scoreData[taskId][itemIdx]===val?null:val;
+  if(window._scoreRebuild) window._scoreRebuild();
+}
+
+async function saveScore(id){
+  const t=S.tasks.find(x=>x.id===id); if(!t)return;
+  const sc=S.scoreData[id]||[];
+  const vals=sc.filter((v,i)=>SCORE_ITEMS[i].active&&v!==null);
+  const avg=vals.length>0?(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+  t.score=Math.round(avg*10)/10;
+  await db.from('projects').update({score:t.score}).eq('id',id);
+  await saveScores();
+  closeModal("modal-score"); renderAdmin();
+  toast(`✓ 평점이 저장되었습니다. 평균: ${t.score.toFixed(1)}`);
+}
+
+/* ═══ 모달 공통 ═══ */
+function openModal(id){ document.getElementById(id).classList.add("active"); }
+function closeModal(id){ document.getElementById(id).classList.remove("active"); }
+
+/* ═══ 토스트 ═══ */
+function toast(msg){
+  const d=document.createElement("div");
+  d.style.cssText="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:13px 22px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 10px 25px -5px rgba(0,0,0,.3);z-index:999;animation:fadeup .2s;white-space:nowrap;";
+  d.textContent=msg; document.body.appendChild(d);
+  setTimeout(()=>d.remove(),2600);
+}
+
+/* ═══ 초기화 ═══ */
+async function init(){
+  await Promise.all([load(), loadScores(), loadTL()]);
+  renderUser();
+}
+init();
+</script>
+</body>
+</html>
